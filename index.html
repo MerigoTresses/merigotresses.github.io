@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Merigo Tresses | Premium Hair Braiding in Fukuoka, Japan</title>
+  <meta name="description" content="Neat, beautiful, long-lasting braids with a soft, professional touch by Mercy in Fukuoka, Japan. Book your appointment today." />
+  <meta property="og:title" content="Merigo Tresses | Premium Hair Braiding in Fukuoka" />
+  <meta property="og:description" content="Neat, beautiful, long-lasting braids with a professional touch by Mercy in Fukuoka, Japan." />
+  <meta property="og:image" content="images/hero.jpg" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://merigotresses.github.io" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="navbar">
+  <div class="nav-inner">
+    <a href="#home" class="nav-logo">Merigo <span>Tresses</span></a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#book">Book</a></li>
+      <li><a href="#aichat">AI Chat</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="#book" class="nav-cta">Book Now</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <p class="hero-tag">✦ Fukuoka, Japan · Home Studio</p>
+    <h1 class="hero-title">Beautiful Braids,<br /><em>Crafted with Care</em></h1>
+    <p class="hero-sub">Neat, long-lasting protective styles for every occasion — crafted with a gentle, professional touch in a warm home studio in Fukuoka.</p>
+    <div class="hero-btns">
+      <a href="#book" class="btn btn-primary">Book Appointment</a>
+      <a href="#services" class="btn btn-outline">View Services</a>
+    </div>
+    <div class="hero-badges">
+      <span>✦ Cash Payment</span>
+      <span>✦ Weekends & Holidays</span>
+      <span>✦ Hair Included*</span>
+    </div>
+  </div>
+  <div class="hero-image">
+    <div class="hero-img-frame">
+      <img src="images/hero.jpg" alt="Beautiful braids by Mercy at Merigo Tresses Fukuoka"
+           onerror="this.src='https://placehold.co/480x580/C9841A/fff?text=Merigo+Tresses'" />
+      <div class="hero-img-badge">✦ Braids by Mercy</div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="section services" id="services">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-tag">✦ What We Offer</p>
+      <h2>Services & Pricing</h2>
+      <p class="section-sub">Premium protective styling customised to your needs. Hair included where marked.</p>
+    </div>
+    <div class="services-grid" id="servicesGrid"></div>
+    <div class="hair-policy">
+      <h3>✦ Hair Policy</h3>
+      <ul>
+        <li>One pack of hair <strong>included</strong> for Knotless Braids, Box Braids, Pick 'n' Drop, Cornrows Braids, and Fulani Braids.</li>
+        <li>Please <strong>bring your own extensions</strong> for Kinky Braids and Goddess Braids.</li>
+        <li>After booking, send your style reference photo on <strong>WhatsApp or LINE</strong> so your appointment can be confirmed.</li>
+        <li>For styles not listed, message <strong>@merigo_tresses</strong> on Instagram or WhatsApp before booking.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="section gallery-section" id="gallery">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-tag">✦ Our Work</p>
+      <h2>Gallery</h2>
+      <p class="section-sub">A glimpse of our elegant styling. Click any photo to view.</p>
+    </div>
+    <div class="gallery-grid" id="galleryGrid"></div>
+    <div class="gallery-cta">
+      <a href="https://instagram.com/merigo_tresses" target="_blank" rel="noopener" class="btn btn-outline" style="color:var(--gold-light);border-color:var(--gold-light);">
+        See More on Instagram · @merigo_tresses
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lbClose">✕</button>
+  <button class="lightbox-prev" id="lbPrev">‹</button>
+  <img src="" alt="" id="lbImg" />
+  <button class="lightbox-next" id="lbNext">›</button>
+</div>
+
+<!-- BOOK -->
+<section class="section book-section" id="book">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-tag">✦ Reserve Your Slot</p>
+      <h2>Book an Appointment</h2>
+      <p class="section-sub">Available Saturdays & Sundays + Japanese public holidays, 10am–6pm. Cash payment at the location. Confirmation via WhatsApp or LINE.</p>
+    </div>
+    <div class="book-wrap">
+      <!-- FORM -->
+      <form class="book-form" id="bookingForm"
+            data-endpoint="https://formspree.io/f/YOUR_FORM_ID">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="clientName">Full Name *</label>
+            <input type="text" id="clientName" name="clientName" placeholder="Your name" required />
+          </div>
+          <div class="form-group">
+            <label for="clientEmail">Email Address *</label>
+            <input type="email" id="clientEmail" name="clientEmail" placeholder="your@email.com" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="clientPhone">WhatsApp / LINE Number *</label>
+            <input type="text" id="clientPhone" name="clientPhone" placeholder="+81... or +49..." required />
+          </div>
+          <div class="form-group">
+            <label for="contactMethod">Confirm via *</label>
+            <select id="contactMethod" name="contactMethod" required>
+              <option value="">Select...</option>
+              <option value="WhatsApp">WhatsApp</option>
+              <option value="LINE">LINE</option>
+              <option value="Email">Email</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="service">Hairstyle *</label>
+            <select id="service" name="service" required>
+              <option value="">Select a style...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="hairLength">Hair Length</label>
+            <select id="hairLength" name="hairLength">
+              <option value="">Select...</option>
+              <option value="Short (shoulder)">Short (shoulder)</option>
+              <option value="Medium (chest)">Medium (chest)</option>
+              <option value="Long (waist)">Long (waist)</option>
+              <option value="Extra Long">Extra Long</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="apptDate">Preferred Date * <span style="font-size:0.75rem;font-weight:400;color:var(--text-muted)">(Weekends & holidays only)</span></label>
+            <input type="date" id="apptDate" name="apptDate" required />
+          </div>
+          <div class="form-group">
+            <label for="apptTime">Preferred Time *</label>
+            <select id="apptTime" name="apptTime" required>
+              <option value="">Select time...</option>
+              <option value="10:00">10:00 AM</option>
+              <option value="11:00">11:00 AM</option>
+              <option value="12:00">12:00 PM</option>
+              <option value="13:00">1:00 PM</option>
+              <option value="14:00">2:00 PM</option>
+              <option value="15:00">3:00 PM</option>
+              <option value="16:00">4:00 PM</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group full">
+          <label for="notes">Additional Notes / Style Reference Link</label>
+          <textarea id="notes" name="notes" rows="3"
+            placeholder="Any special requests, style inspiration links, or notes for Mercy..."></textarea>
+        </div>
+        <div class="form-policy">
+          ✦ <strong>Cash only</strong> at the location &nbsp;·&nbsp;
+          Cancel at least <strong>24 hours</strong> before your appointment &nbsp;·&nbsp;
+          Send your style photo after booking
+        </div>
+        <button type="submit" class="btn btn-primary full-btn" id="submitBtn">
+          Request Appointment →
+        </button>
+        <div class="form-success" id="formSuccess">
+          <span class="success-icon">✦</span>
+          <h3>Booking Request Sent!</h3>
+          <p>Mercy will confirm your appointment via WhatsApp or LINE shortly. Please also send your style reference photo!</p>
+        </div>
+        <div class="form-error" id="formError">
+          <p>Oops! Something went wrong. Please contact Mercy directly on WhatsApp or LINE to book.</p>
+        </div>
+      </form>
+
+      <!-- SIDEBAR -->
+      <div class="book-info">
+        <div class="book-info-card">
+          <h3>✦ Before Your Appointment</h3>
+          <ul>
+            <li>Come with hair <strong>clean and detangled</strong></li>
+            <li>Please arrive on time for your slot</li>
+            <li>Send a <strong>style reference photo</strong> after booking</li>
+            <li>Message first for styles not listed</li>
+          </ul>
+        </div>
+        <div class="book-info-card">
+          <h3>✦ Availability</h3>
+          <p><strong>Saturdays & Sundays</strong><br />10:00 AM – 6:00 PM</p>
+          <p style="margin-top:0.6rem;font-size:0.85rem;opacity:0.75;">Also available on Japanese public holidays! 🎌</p>
+        </div>
+        <div class="book-info-card">
+          <h3>✦ Payment</h3>
+          <p><strong>Cash only</strong> at the appointment location.</p>
+          <p style="margin-top:0.5rem;font-size:0.85rem;opacity:0.75;">No card or online payments at this time.</p>
+        </div>
+        <a href="https://wa.me/491706128008" target="_blank" rel="noopener" class="contact-quick whatsapp">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+          </svg>
+          WhatsApp Mercy
+        </a>
+        <a href="https://line.me/ti/p/+819071019857" target="_blank" rel="noopener" class="contact-quick line-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>
+          </svg>
+          Message on LINE
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI CHAT -->
+<section class="section aichat-section" id="aichat">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-tag">✦ Ask Anything</p>
+      <h2>Chat with Meri</h2>
+      <p class="section-sub">Our AI assistant can answer your questions and help you book an appointment instantly.</p>
+    </div>
+    <div class="chat-container">
+      <div class="chat-header">
+        <div class="chat-avatar">🌟</div>
+        <div class="chat-header-info">
+          <h4>Meri — Merigo Tresses Assistant</h4>
+          <p>Powered by AI · Answers instantly</p>
+        </div>
+        <div class="chat-online"></div>
+      </div>
+      <div class="chat-messages" id="chatMessages">
+        <div class="msg-typing" id="typingIndicator">
+          <div class="typing-dots"><span></span><span></span><span></span></div>
+        </div>
+      </div>
+      <div class="chat-quick-btns">
+        <button class="quick-btn" data-msg="What services do you offer?">Services & Pricing</button>
+        <button class="quick-btn" data-msg="How do I book an appointment?">How to Book</button>
+        <button class="quick-btn" data-msg="What should I do before my appointment?">Appointment Tips</button>
+        <button class="quick-btn" data-msg="Which braids are best for natural hair?">Best for Natural Hair</button>
+        <button class="quick-btn" data-msg="I'd like to book a knotless braids appointment">Book Now</button>
+      </div>
+      <form class="chat-input-area" id="chatForm">
+        <input class="chat-input" id="chatInput" type="text"
+               placeholder="Ask about services, pricing, booking..." autocomplete="off" />
+        <button type="submit" class="chat-send" aria-label="Send">➤</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="section about-section" id="about">
+  <div class="container">
+    <div class="about-inner">
+      <div class="about-img-wrap">
+        <img src="images/IMG_3056.jpg" alt="Mercy — Merigo Tresses Fukuoka"
+             onerror="this.src='https://placehold.co/500x560/C9841A/fff?text=Mercy'" />
+        <div class="about-img-badge">
+          <strong>Mercy</strong>
+          <span>Your Braider in Fukuoka</span>
+        </div>
+      </div>
+      <div class="about-content">
+        <div class="section-header">
+          <p class="section-tag">✦ About Merigo Tresses</p>
+          <h2>A Trusted Braider<br /><em>in Fukuoka</em></h2>
+        </div>
+        <p class="about-text">
+          Welcome to Merigo Tresses — a warm, home-based braiding studio nestled right here in Fukuoka, Japan. I'm Mercy, a passionate braider dedicated to creating neat, beautiful, and long-lasting protective styles tailored to your unique hair and vision.
+        </p>
+        <p class="about-text">
+          From classic box braids to elegant knotless styles, every braid is crafted with care, precision, and a gentle touch. Whether you're looking for an everyday protective style or something special for an occasion, I'd love to bring your hair vision to life — right from the comfort of my home studio.
+        </p>
+        <div class="about-values">
+          <div class="about-value"><span class="about-value-icon">✦</span> Neat & long-lasting braids</div>
+          <div class="about-value"><span class="about-value-icon">✦</span> Professional, gentle service</div>
+          <div class="about-value"><span class="about-value-icon">✦</span> Beautiful everyday & occasion styles</div>
+          <div class="about-value"><span class="about-value-icon">✦</span> Easy booking & direct communication</div>
+          <div class="about-value"><span class="about-value-icon">✦</span> Warm, home studio atmosphere</div>
+          <div class="about-value"><span class="about-value-icon">✦</span> Proudly serving Fukuoka, Japan</div>
+        </div>
+        <a href="#book" class="btn btn-primary">Book an Appointment</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section contact-section" id="contact">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-tag">✦ Get in Touch</p>
+      <h2>Contact</h2>
+      <p class="section-sub">Have a question or want to get in touch? Reach Mercy through any of these channels.</p>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-card">
+        <div class="contact-card-icon">💬</div>
+        <h3>WhatsApp</h3>
+        <p>Quick messages & booking confirmations</p>
+        <a href="https://wa.me/491706128008" target="_blank" rel="noopener">+49 170 612 8008</a>
+      </div>
+      <div class="contact-card">
+        <div class="contact-card-icon">🟢</div>
+        <h3>LINE</h3>
+        <p>Chat with Mercy on LINE (Japan)</p>
+        <a href="https://line.me/ti/p/+819071019857" target="_blank" rel="noopener">+81 90 7101 9857</a>
+      </div>
+      <div class="contact-card">
+        <div class="contact-card-icon">📸</div>
+        <h3>Instagram</h3>
+        <p>See our latest styles and updates</p>
+        <a href="https://instagram.com/merigo_tresses" target="_blank" rel="noopener">@merigo_tresses</a>
+      </div>
+      <div class="contact-card">
+        <div class="contact-card-icon">📍</div>
+        <h3>Location</h3>
+        <p>Home studio — exact address shared after booking confirmation</p>
+        <span style="color:var(--gold);font-weight:600;font-size:0.9rem">Fukuoka, Japan</span>
+      </div>
+    </div>
+    <div class="contact-bottom">
+      <h3>Ready to Get Your Braids Done?</h3>
+      <p>Secure your slot today and achieve the beautiful, neat look you desire.</p>
+      <div class="contact-bottom-btns">
+        <a href="#book" class="btn btn-primary">Book Appointment</a>
+        <a href="https://wa.me/491706128008" target="_blank" rel="noopener" class="btn btn-light">WhatsApp Mercy</a>
+        <a href="https://instagram.com/merigo_tresses" target="_blank" rel="noopener" class="btn btn-outline" style="border-color:rgba(255,255,255,0.3);color:rgba(255,255,255,0.8)">Instagram</a>
+      </div>
+      <p style="margin-top:1.5rem;font-size:0.82rem;opacity:0.6;">After booking, please send your style inspiration photo on WhatsApp or LINE. ✦</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-links">
+    <a href="#home">Home</a>
+    <a href="#services">Services</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#book">Book</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+    <a href="https://instagram.com/merigo_tresses" target="_blank" rel="noopener">Instagram</a>
+  </div>
+  <p>© 2025 <strong>Merigo Tresses</strong> · Braids by Mercy · Fukuoka, Japan · All rights reserved.</p>
+</footer>
+
+<!-- FLOATING CONTACT BUTTONS -->
+<div class="float-btns">
+  <a href="https://wa.me/491706128008" target="_blank" rel="noopener" class="float-btn float-wa" title="WhatsApp Mercy" aria-label="WhatsApp">
+    <svg viewBox="0 0 24 24" fill="white" width="26" height="26">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+  </a>
+  <a href="https://line.me/ti/p/+819071019857" target="_blank" rel="noopener" class="float-btn float-line" title="LINE" aria-label="LINE">
+    <svg viewBox="0 0 24 24" fill="white" width="26" height="26">
+      <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>
+    </svg>
+  </a>
+</div>
+
+<!-- ADMIN PANEL (Mercy only) -->
+<button class="admin-toggle" id="adminToggle" title="Admin — Block dates" aria-label="Admin">🔒</button>
+<div class="admin-panel" id="adminPanel">
+  <h4>🔒 Availability Manager</h4>
+  <p class="admin-sub">Block specific dates so clients cannot book them.</p>
+  <label for="adminDateInput">Block a date:</label>
+  <input type="date" id="adminDateInput" />
+  <button class="admin-add-btn" id="adminAddBtn">Block This Date</button>
+  <label style="margin-top:1rem">Currently blocked:</label>
+  <div class="admin-blocked-list" id="blockedList"></div>
+</div>
+
+<script src="js/main.js"></script>
+</body>
+</html>
