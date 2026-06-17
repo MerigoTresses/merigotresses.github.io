@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Merigo Tresses — Admin</title>
+<meta name="robots" content="noindex, nofollow"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --gold:#C9841A;--gold-l:#F0A830;--gold-p:#FDF3E3;--gold-d:#8B5A0A;
+  --dark:#0D0608;--dark2:#1A0C0E;--cream:#FBF5EC;--white:#fff;
+  --text:#1A0C0E;--muted:#7A5C35;--border:rgba(201,132,26,0.18);
+  --green:#1E6B45;--red:#7B1818;
+  --r:14px;--r-sm:8px;--sh-lg:0 12px 48px rgba(12,5,0,0.16);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--dark);color:var(--text);min-height:100vh;}
+h1,h2,h3{font-family:'Playfair Display',serif;}
+input,button{font-family:'DM Sans',sans-serif;font-size:16px!important;}
+
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,var(--dark),var(--dark2));}
+.login-box{background:var(--white);border-radius:var(--r);padding:40px 32px;width:100%;max-width:380px;box-shadow:var(--sh-lg);}
+.login-box h1{font-size:1.4rem;color:var(--text);margin-bottom:6px;text-align:center;}
+.login-box p{font-size:.85rem;color:var(--muted);text-align:center;margin-bottom:24px;}
+.login-box input{width:100%;padding:13px 16px;border:1.5px solid var(--border);border-radius:var(--r-sm);background:var(--cream);margin-bottom:14px;outline:none;}
+.login-box input:focus{border-color:var(--gold);}
+.login-box button{width:100%;padding:13px;background:var(--gold);color:#fff;border:none;border-radius:50px;font-weight:700;cursor:pointer;}
+.login-box button:hover{background:var(--gold-l);}
+.login-error{color:var(--red);font-size:.82rem;text-align:center;margin-top:10px;display:none;}
+
+#dashboard{display:none;min-height:100vh;background:var(--cream);}
+.admin-header{background:var(--dark);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;}
+.admin-header h1{color:var(--gold);font-size:1.2rem;}
+.admin-header span{color:rgba(255,255,255,.5);font-size:.78rem;}
+.logout-btn{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2);padding:8px 18px;border-radius:50px;font-size:.82rem;cursor:pointer;}
+.logout-btn:hover{background:rgba(255,255,255,.18);}
+.admin-body{max-width:900px;margin:0 auto;padding:32px 20px;}
+.admin-tabs{display:flex;gap:8px;margin-bottom:24px;background:var(--white);border:1px solid var(--border);border-radius:50px;padding:4px;max-width:520px;}
+.admin-tab{flex:1;border:none;background:none;padding:10px 6px;border-radius:50px;font-size:.85rem;font-weight:600;cursor:pointer;color:var(--muted);transition:all .15s;}
+.admin-tab.active{background:var(--gold);color:#fff;}
+.panel{display:none;background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:28px;}
+.panel.active{display:block;}
+.panel h2{font-size:1.1rem;margin-bottom:6px;}
+.panel-sub{font-size:.85rem;color:var(--muted);margin-bottom:20px;}
+.field{margin-bottom:18px;}
+.field label{font-size:.82rem;font-weight:600;display:block;margin-bottom:6px;}
+.field input[type=date]{padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--r-sm);background:var(--cream);width:240px;}
+.btn{padding:11px 24px;background:var(--gold);color:#fff;border:none;border-radius:50px;font-weight:600;cursor:pointer;font-size:.88rem;}
+.btn:hover{background:var(--gold-l);}
+.blocked-list{display:flex;flex-direction:column;gap:8px;margin-top:16px;max-width:420px;}
+.blocked-item{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--cream);border-radius:var(--r-sm);font-size:.88rem;}
+.blocked-item button{background:none;border:none;color:var(--red);cursor:pointer;font-size:.95rem;font-weight:600;}
+.empty-note{font-size:.85rem;color:var(--muted);padding:12px 0;}
+.slot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-top:16px;max-width:600px;}
+.slot-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-radius:var(--r-sm);border:1.5px solid var(--border);background:var(--cream);font-size:.88rem;cursor:pointer;transition:all .15s;font-weight:500;}
+.slot-toggle.is-open{border-color:var(--gold);background:var(--gold-p);}
+.slot-toggle.is-closed{border-color:#ddd;background:#f0f0f0;color:#999;}
+.slot-toggle.is-booked{border-color:#ddd;background:#e8e8e8;color:#aaa;cursor:not-allowed;}
+.slot-status{font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:50px;}
+.slot-toggle.is-open .slot-status{background:var(--gold);color:#fff;}
+.slot-toggle.is-closed .slot-status{background:#ccc;color:#fff;}
+.slot-toggle.is-booked .slot-status{background:#bbb;color:#fff;}
+.loading-note{font-size:.85rem;color:var(--muted);padding:16px 0;text-align:center;}
+.booking-row{display:flex;flex-wrap:wrap;gap:16px;padding:14px 16px;background:var(--cream);border-radius:var(--r-sm);font-size:.85rem;margin-bottom:8px;align-items:center;}
+.booking-row strong{color:var(--gold-d);}
+.status-pill{font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:50px;text-transform:uppercase;}
+.status-pending{background:#FDF3E3;color:var(--gold-d);}
+.status-confirmed{background:#E3F3E9;color:var(--green);}
+.status-cancelled{background:#F3E3E3;color:var(--red);}
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <div class="login-box">
+    <h1>✦ Merigo Tresses</h1>
+    <p>Admin access only</p>
+    <input type="password" id="passwordInput" placeholder="Enter password" autocomplete="off"/>
+    <button id="loginBtn">Log In</button>
+    <p class="login-error" id="loginError">Incorrect password. Try again.</p>
+  </div>
+</div>
+
+<div id="dashboard">
+  <div class="admin-header">
+    <div>
+      <h1>✦ Merigo Tresses Admin</h1>
+      <span>Availability & booking manager</span>
+    </div>
+    <button class="logout-btn" id="logoutBtn">Log Out</button>
+  </div>
+
+  <div class="admin-body">
+    <div class="admin-tabs">
+      <button class="admin-tab active" id="tabDay" onclick="switchTab('Day')">Block Whole Days</button>
+      <button class="admin-tab" id="tabSlot" onclick="switchTab('Slot')">Manage Time Slots</button>
+      <button class="admin-tab" id="tabBookings" onclick="switchTab('Bookings')">Recent Bookings</button>
+    </div>
+
+    <div class="panel active" id="panelDay">
+      <h2>Block Whole Days</h2>
+      <p class="panel-sub">Block a date entirely so clients cannot book any slot on it — useful for holidays, travel, or personal days off.</p>
+      <div class="field">
+        <label>Select a date to block:</label>
+        <input type="date" id="dayInput"/>
+      </div>
+      <button class="btn" id="addDayBtn">Block This Date</button>
+      <div class="blocked-list" id="blockedList"></div>
+    </div>
+
+    <div class="panel" id="panelSlot">
+      <h2>Manage Time Slots</h2>
+      <p class="panel-sub">Open or close individual time slots on a specific date — useful for partial availability.</p>
+      <div class="field">
+        <label>Choose a date:</label>
+        <input type="date" id="slotDateInput"/>
+      </div>
+      <div class="slot-grid" id="slotGrid"></div>
+      <p class="loading-note" id="slotHint">Pick a date to see its time slots.</p>
+    </div>
+
+    <div class="panel" id="panelBookings">
+      <h2>Recent Bookings</h2>
+      <p class="panel-sub">The 20 most recent booking requests, newest first.</p>
+      <div id="bookingsList"><p class="loading-note">Loading...</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://vpvbghdfounqcarrkbeu.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_UlCXeIxgu_8rwXzRGPXsIg_7v8KuEFU';
+const ADMIN_PASSWORD = 'MerigoTresses2026';
+const ALL_SLOTS = ['10:00','11:00','12:00','13:00','14:30','15:30','16:30'];
+
+function attemptLogin() {
+  const val = document.getElementById('passwordInput').value;
+  if (val === ADMIN_PASSWORD) {
+    sessionStorage.setItem('mt_admin_authed', 'yes');
+    showDashboard();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+  }
+}
+document.getElementById('loginBtn').addEventListener('click', attemptLogin);
+document.getElementById('passwordInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') attemptLogin();
+});
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  sessionStorage.removeItem('mt_admin_authed');
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('passwordInput').value = '';
+});
+
+function showDashboard() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  loadBlockedDays();
+  loadBookings();
+}
+
+if (sessionStorage.getItem('mt_admin_authed') === 'yes') {
+  showDashboard();
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab' + tab).classList.add('active');
+  document.getElementById('panel' + tab).classList.add('active');
+}
+
+async function loadBlockedDays() {
+  const list = document.getElementById('blockedList');
+  list.innerHTML = '<p class="loading-note">Loading...</p>';
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/availability_overrides?appt_time=is.null&is_open=eq.false&select=appt_date&order=appt_date.asc`, {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    const data = await res.json();
+    renderBlockedDays(Array.isArray(data) ? data.map(r => r.appt_date) : []);
+  } catch(e) {
+    list.innerHTML = '<p class="loading-note">Could not load blocked dates.</p>';
+  }
+}
+
+function renderBlockedDays(dates) {
+  const list = document.getElementById('blockedList');
+  if (!dates.length) {
+    list.innerHTML = '<p class="empty-note">No dates currently blocked.</p>';
+    return;
+  }
+  list.innerHTML = '';
+  dates.forEach(d => {
+    const div = document.createElement('div');
+    div.className = 'blocked-item';
+    const label = new Date(d + 'T00:00:00').toLocaleDateString('en', {weekday:'short', month:'short', day:'numeric', year:'numeric'});
+    div.innerHTML = `<span>${label}</span><button data-date="${d}">Remove</button>`;
+    div.querySelector('button').addEventListener('click', () => unblockDay(d));
+    list.appendChild(div);
+  });
+}
+
+document.getElementById('addDayBtn').addEventListener('click', async () => {
+  const val = document.getElementById('dayInput').value;
+  if (!val) return;
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/availability_overrides?on_conflict=appt_date,appt_time`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Prefer': 'resolution=merge-duplicates,return=minimal'
+      },
+      body: JSON.stringify({ appt_date: val, appt_time: null, is_open: false, reason: 'Blocked by admin' })
+    });
+    document.getElementById('dayInput').value = '';
+    loadBlockedDays();
+  } catch(e) {
+    alert('Could not block that date. Check your connection and try again.');
+  }
+});
+
+async function unblockDay(dateStr) {
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/availability_overrides?appt_date=eq.${dateStr}&appt_time=is.null`, {
+      method: 'DELETE',
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    loadBlockedDays();
+  } catch(e) {
+    alert('Could not unblock that date. Check your connection and try again.');
+  }
+}
+
+async function fetchSlotOverridesAdmin(dateStr) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/availability_overrides?appt_date=eq.${dateStr}&appt_time=not.is.null&select=appt_time,is_open`, {
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+  });
+  const data = await res.json();
+  const map = {};
+  if (Array.isArray(data)) data.forEach(row => { map[row.appt_time] = row.is_open; });
+  return map;
+}
+
+async function fetchBookedSlotsForDate(dateStr) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/website_bookings?appt_date=eq.${dateStr}&status=in.(pending,confirmed)&select=appt_time`, {
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+  });
+  const data = await res.json();
+  return Array.isArray(data) ? data.map(r => r.appt_time) : [];
+}
+
+async function setSlotOverride(dateStr, time, isOpen) {
+  await fetch(`${SUPABASE_URL}/rest/v1/availability_overrides?on_conflict=appt_date,appt_time`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Prefer': 'resolution=merge-duplicates,return=minimal'
+    },
+    body: JSON.stringify({ appt_date: dateStr, appt_time: time, is_open: isOpen })
+  });
+}
+
+async function renderSlotGrid(dateStr) {
+  const grid = document.getElementById('slotGrid');
+  const hint = document.getElementById('slotHint');
+  if (!dateStr) {
+    grid.innerHTML = '';
+    hint.style.display = 'block';
+    hint.textContent = 'Pick a date to see its time slots.';
+    return;
+  }
+  hint.style.display = 'block';
+  hint.textContent = 'Loading...';
+  grid.innerHTML = '';
+
+  const [overrides, booked] = await Promise.all([
+    fetchSlotOverridesAdmin(dateStr),
+    fetchBookedSlotsForDate(dateStr)
+  ]);
+
+  hint.style.display = 'none';
+
+  ALL_SLOTS.forEach(slot => {
+    renderOneSlot(dateStr, slot, overrides, booked);
+  });
+}
+
+function renderOneSlot(dateStr, slot, overrides, booked) {
+  const grid = document.getElementById('slotGrid');
+  const isBooked = booked.includes(slot);
+  const isOpen = overrides.hasOwnProperty(slot) ? overrides[slot] : true;
+  const div = document.createElement('div');
+  div.className = 'slot-toggle ' + (isBooked ? 'is-booked' : (isOpen ? 'is-open' : 'is-closed'));
+  div.innerHTML = `<span>${slot}</span><span class="slot-status">${isBooked ? 'Booked' : (isOpen ? 'Open' : 'Closed')}</span>`;
+  if (!isBooked) {
+    div.addEventListener('click', async () => {
+      const newState = !isOpen;
+      div.style.opacity = '0.5';
+      await setSlotOverride(dateStr, slot, newState);
+      overrides[slot] = newState;
+      grid.innerHTML = '';
+      ALL_SLOTS.forEach(s => renderOneSlot(dateStr, s, overrides, booked));
+    });
+  }
+  grid.appendChild(div);
+}
+
+document.getElementById('slotDateInput').addEventListener('change', (e) => {
+  renderSlotGrid(e.target.value);
+});
+
+async function loadBookings() {
+  const list = document.getElementById('bookingsList');
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/website_bookings?select=*&order=created_at.desc&limit=20`, {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    const data = await res.json();
+    if (!Array.isArray(data) || !data.length) {
+      list.innerHTML = '<p class="empty-note">No bookings yet.</p>';
+      return;
+    }
+    list.innerHTML = '';
+    data.forEach(b => {
+      const div = document.createElement('div');
+      div.className = 'booking-row';
+      const dateLabel = new Date(b.appt_date + 'T00:00:00').toLocaleDateString('en', {month:'short', day:'numeric', year:'numeric'});
+      div.innerHTML = `
+        <strong>${b.client_name}</strong>
+        <span>${b.service}</span>
+        <span>${dateLabel} @ ${b.appt_time}</span>
+        <span>${b.client_phone}</span>
+        <span class="status-pill status-${b.status}">${b.status}</span>
+      `;
+      list.appendChild(div);
+    });
+  } catch(e) {
+    list.innerHTML = '<p class="empty-note">Could not load bookings.</p>';
+  }
+}
+</script>
+</body>
+</html>
