@@ -1247,8 +1247,9 @@ async function submitBooking() {
   };
 
   // Save to Supabase
+  let saveSucceeded = false;
   try {
-    await fetch(`${SUPABASE_URL}/rest/v1/website_bookings`, {
+    const saveRes = await fetch(`${SUPABASE_URL}/rest/v1/website_bookings`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -1258,13 +1259,29 @@ async function submitBooking() {
       },
       body: JSON.stringify(bookingPayload)
     });
+    if (!saveRes.ok) {
+      const errText = await saveRes.text();
+      console.error('Supabase rejected the booking:', saveRes.status, errText);
+      alert('Sorry, something went wrong saving your booking. Please try again or message Mercy directly on WhatsApp to book. (Error: ' + saveRes.status + ')');
+      btn.disabled = false;
+      btn.textContent = 'Confirm Booking Request →';
+      return;
+    }
+    saveSucceeded = true;
   } catch(e) {
-    console.log('Booking save failed, continuing anyway:', e);
+    console.error('Booking save failed (network error):', e);
+    alert('Sorry, we could not reach the booking system. Please check your internet connection and try again, or message Mercy directly on WhatsApp.');
+    btn.disabled = false;
+    btn.textContent = 'Confirm Booking Request →';
+    return;
   }
 
   // Trigger confirmation emails (client + Mercy) via Edge Function
+  // Note: if this fails, the booking itself is still safely saved above —
+  // we don't block the success screen on email delivery, but we do log it
+  // clearly so it's visible in the browser console for debugging.
   try {
-    await fetch(EMAIL_FUNCTION_URL, {
+    const emailRes = await fetch(EMAIL_FUNCTION_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -1272,8 +1289,15 @@ async function submitBooking() {
       },
       body: JSON.stringify(bookingPayload)
     });
+    if (!emailRes.ok) {
+      const errText = await emailRes.text();
+      console.error('Email function returned an error:', emailRes.status, errText);
+    } else {
+      const emailData = await emailRes.json();
+      console.log('Email function response:', emailData);
+    }
   } catch(e) {
-    console.log('Email send failed, booking still saved:', e);
+    console.error('Email send failed (network error), booking still saved:', e);
   }
 
   // Show success
