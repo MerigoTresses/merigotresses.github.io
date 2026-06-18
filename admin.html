@@ -48,9 +48,6 @@ input,button{font-family:'DM Sans',sans-serif;font-size:16px!important;}
 .field input[type=date]{padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--r-sm);background:var(--cream);width:240px;}
 .btn{padding:11px 24px;background:var(--gold);color:#fff;border:none;border-radius:50px;font-weight:600;cursor:pointer;font-size:.88rem;}
 .btn:hover{background:var(--gold-l);}
-.blocked-list{display:flex;flex-direction:column;gap:8px;margin-top:16px;max-width:420px;}
-.blocked-item{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--cream);border-radius:var(--r-sm);font-size:.88rem;}
-.blocked-item button{background:none;border:none;color:var(--red);cursor:pointer;font-size:.95rem;font-weight:600;}
 .empty-note{font-size:.85rem;color:var(--muted);padding:12px 0;}
 .slot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-top:16px;max-width:600px;}
 .slot-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-radius:var(--r-sm);border:1.5px solid var(--border);background:var(--cream);font-size:.88rem;cursor:pointer;transition:all .15s;font-weight:500;}
@@ -68,6 +65,29 @@ input,button{font-family:'DM Sans',sans-serif;font-size:16px!important;}
 .status-pending{background:#FDF3E3;color:var(--gold-d);}
 .status-confirmed{background:#E3F3E9;color:var(--green);}
 .status-cancelled{background:#F3E3E3;color:var(--red);}
+
+.cal-card{max-width:480px;}
+.cal-nav-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.cal-month-label{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;}
+.cal-nav-btn{background:var(--cream);border:1.5px solid var(--border);border-radius:50%;width:34px;height:34px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;}
+.cal-nav-btn:hover{border-color:var(--gold);color:var(--gold);}
+.cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:6px;}
+.cal-weekdays span{text-align:center;font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:16px;}
+.cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:var(--r-sm);font-size:.85rem;font-weight:600;cursor:pointer;border:1.5px solid transparent;transition:all .15s;position:relative;}
+.cal-day.cal-empty{cursor:default;}
+.cal-day.cal-open{background:var(--gold-p);color:var(--gold-d);border-color:rgba(201,132,26,.3);}
+.cal-day.cal-open:hover{border-color:var(--gold);}
+.cal-day.cal-closed{background:#f0f0f0;color:#999;border-color:#ddd;text-decoration:line-through;}
+.cal-day.cal-closed:hover{border-color:#bbb;}
+.cal-day.cal-past{background:transparent;color:#ccc;cursor:not-allowed;}
+.cal-day.cal-today{box-shadow:inset 0 0 0 2px var(--gold);}
+.cal-day.cal-loading{opacity:.4;cursor:wait;}
+.cal-legend{display:flex;gap:18px;font-size:.78rem;color:var(--muted);}
+.cal-legend .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:middle;}
+.dot-open{background:var(--gold);}
+.dot-closed{background:#bbb;}
+.dot-past{background:#e5e5e5;}
 </style>
 </head>
 <body>
@@ -99,14 +119,24 @@ input,button{font-family:'DM Sans',sans-serif;font-size:16px!important;}
     </div>
 
     <div class="panel active" id="panelDay">
-      <h2>Block Whole Days</h2>
-      <p class="panel-sub">Block a date entirely so clients cannot book any slot on it — useful for holidays, travel, or personal days off.</p>
-      <div class="field">
-        <label>Select a date to block:</label>
-        <input type="date" id="dayInput"/>
+      <h2>Availability Calendar</h2>
+      <p class="panel-sub">Every day is open for booking by default. Click any day to close it, click again to reopen it. Changes save instantly and clients see them right away.</p>
+      <div class="cal-card">
+        <div class="cal-nav-row">
+          <button class="cal-nav-btn" id="calPrevBtn">‹</button>
+          <div class="cal-month-label" id="calMonthLabel"></div>
+          <button class="cal-nav-btn" id="calNextBtn">›</button>
+        </div>
+        <div class="cal-weekdays">
+          <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+        <div class="cal-legend">
+          <span><i class="dot dot-open"></i> Open</span>
+          <span><i class="dot dot-closed"></i> Closed</span>
+          <span><i class="dot dot-past"></i> Past</span>
+        </div>
       </div>
-      <button class="btn" id="addDayBtn">Block This Date</button>
-      <div class="blocked-list" id="blockedList"></div>
     </div>
 
     <div class="panel" id="panelSlot">
@@ -157,7 +187,7 @@ document.getElementById('logoutBtn').addEventListener('click', () => {
 function showDashboard() {
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('dashboard').style.display = 'block';
-  loadBlockedDays();
+  renderAdminCalendar();
   loadBookings();
 }
 
@@ -172,69 +202,108 @@ function switchTab(tab) {
   document.getElementById('panel' + tab).classList.add('active');
 }
 
-async function loadBlockedDays() {
-  const list = document.getElementById('blockedList');
-  list.innerHTML = '<p class="loading-note">Loading...</p>';
+// ── VISUAL AVAILABILITY CALENDAR ──
+let adminCalDate = new Date();
+let blockedDatesCache = [];
+
+async function fetchBlockedDates() {
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/availability_overrides?appt_time=is.null&is_open=eq.false&select=appt_date&order=appt_date.asc`, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/availability_overrides?appt_time=is.null&is_open=eq.false&select=appt_date`, {
       headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
     });
     const data = await res.json();
-    renderBlockedDays(Array.isArray(data) ? data.map(r => r.appt_date) : []);
+    blockedDatesCache = Array.isArray(data) ? data.map(r => r.appt_date) : [];
   } catch(e) {
-    list.innerHTML = '<p class="loading-note">Could not load blocked dates.</p>';
+    console.log('Could not fetch blocked dates:', e);
   }
 }
 
-function renderBlockedDays(dates) {
-  const list = document.getElementById('blockedList');
-  if (!dates.length) {
-    list.innerHTML = '<p class="empty-note">No dates currently blocked.</p>';
-    return;
-  }
-  list.innerHTML = '';
-  dates.forEach(d => {
-    const div = document.createElement('div');
-    div.className = 'blocked-item';
-    const label = new Date(d + 'T00:00:00').toLocaleDateString('en', {weekday:'short', month:'short', day:'numeric', year:'numeric'});
-    div.innerHTML = `<span>${label}</span><button data-date="${d}">Remove</button>`;
-    div.querySelector('button').addEventListener('click', () => unblockDay(d));
-    list.appendChild(div);
-  });
+async function renderAdminCalendar() {
+  await fetchBlockedDates();
+  drawAdminCalendar();
 }
 
-document.getElementById('addDayBtn').addEventListener('click', async () => {
-  const val = document.getElementById('dayInput').value;
-  if (!val) return;
+function drawAdminCalendar() {
+  const year = adminCalDate.getFullYear();
+  const month = adminCalDate.getMonth();
+  const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('calMonthLabel').textContent = monthNames[month] + ' ' + year;
+
+  const grid = document.getElementById('calGrid');
+  grid.innerHTML = '';
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  for (let i = 0; i < firstDay; i++) {
+    const el = document.createElement('div');
+    el.className = 'cal-day cal-empty';
+    grid.appendChild(el);
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(year, month, d);
+    const dateStr = date.toISOString().split('T')[0];
+    const el = document.createElement('div');
+    el.textContent = d;
+
+    if (date < today) {
+      el.className = 'cal-day cal-past';
+    } else {
+      const isClosed = blockedDatesCache.includes(dateStr);
+      el.className = 'cal-day ' + (isClosed ? 'cal-closed' : 'cal-open');
+      if (dateStr === new Date().toISOString().split('T')[0]) el.classList.add('cal-today');
+      el.addEventListener('click', () => toggleAdminDay(dateStr, el));
+    }
+    grid.appendChild(el);
+  }
+}
+
+async function toggleAdminDay(dateStr, el) {
+  const isCurrentlyClosed = blockedDatesCache.includes(dateStr);
+  el.classList.add('cal-loading');
+
   try {
-    await fetch(`${SUPABASE_URL}/rest/v1/availability_overrides?on_conflict=appt_date,appt_time`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`,
-        'Prefer': 'resolution=merge-duplicates,return=minimal'
-      },
-      body: JSON.stringify({ appt_date: val, appt_time: null, is_open: false, reason: 'Blocked by admin' })
-    });
-    document.getElementById('dayInput').value = '';
-    loadBlockedDays();
+    if (isCurrentlyClosed) {
+      // Reopen: delete the whole-day override row
+      await fetch(`${SUPABASE_URL}/rest/v1/availability_overrides?appt_date=eq.${dateStr}&appt_time=is.null`, {
+        method: 'DELETE',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+      });
+      blockedDatesCache = blockedDatesCache.filter(d => d !== dateStr);
+      el.className = 'cal-day cal-open';
+    } else {
+      // Close: upsert a whole-day override row
+      await fetch(`${SUPABASE_URL}/rest/v1/availability_overrides?on_conflict=appt_date,appt_time`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Prefer': 'resolution=merge-duplicates,return=minimal'
+        },
+        body: JSON.stringify({ appt_date: dateStr, appt_time: null, is_open: false, reason: 'Closed by admin' })
+      });
+      blockedDatesCache.push(dateStr);
+      el.className = 'cal-day cal-closed';
+    }
   } catch(e) {
-    alert('Could not block that date. Check your connection and try again.');
+    alert('Could not save that change — check your internet connection and try again.');
+  } finally {
+    el.classList.remove('cal-loading');
   }
+}
+
+document.getElementById('calPrevBtn').addEventListener('click', () => {
+  adminCalDate.setMonth(adminCalDate.getMonth() - 1);
+  drawAdminCalendar();
 });
-
-async function unblockDay(dateStr) {
-  try {
-    await fetch(`${SUPABASE_URL}/rest/v1/availability_overrides?appt_date=eq.${dateStr}&appt_time=is.null`, {
-      method: 'DELETE',
-      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-    });
-    loadBlockedDays();
-  } catch(e) {
-    alert('Could not unblock that date. Check your connection and try again.');
-  }
-}
+document.getElementById('calNextBtn').addEventListener('click', () => {
+  adminCalDate.setMonth(adminCalDate.getMonth() + 1);
+  drawAdminCalendar();
+});
 
 async function fetchSlotOverridesAdmin(dateStr) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/availability_overrides?appt_date=eq.${dateStr}&appt_time=not.is.null&select=appt_time,is_open`, {
