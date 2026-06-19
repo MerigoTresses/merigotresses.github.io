@@ -148,6 +148,8 @@ input,select,textarea{font-size:16px!important;}
 .service-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gold);transform:scaleX(0);transition:transform .3s;transform-origin:left;}
 .service-card:hover{transform:translateY(-4px);box-shadow:var(--sh-lg);border-color:var(--gold);}
 .service-card:hover::before{transform:scaleX(1);}
+.service-book-btn{display:block;width:100%;margin-top:14px;padding:9px 0;background:var(--gold);color:#fff;border:none;border-radius:50px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:.03em;transition:background .2s;}
+.service-book-btn:hover{background:var(--gold-d);}
 .service-icon{font-size:1.8rem;margin-bottom:12px;}
 .service-name{font-size:1.05rem;font-weight:700;margin-bottom:6px;}
 .service-price{font-size:1.4rem;font-weight:900;color:var(--gold);font-family:'Playfair Display',serif;margin-bottom:8px;}
@@ -446,6 +448,7 @@ footer p{color:rgba(255,255,255,.3);font-size:.78rem;}
         <div class="service-duration">⏱ Approx. 7 hours</div>
         <div class="service-includes">Beautiful, tension-free knotless braids. Hair included.</div>
         <span class="service-badge badge-included">✦ Hair Included</span>
+        <button class="service-book-btn" onclick="bookService('Knotless Braids|23000|7hrs')">Book This Style →</button>
       </div>
 
       <div class="service-card">
@@ -455,6 +458,7 @@ footer p{color:rgba(255,255,255,.3);font-size:.78rem;}
         <div class="service-duration">⏱ Approx. 7 hours</div>
         <div class="service-includes">Classic box braids, neat and long-lasting. Hair included.</div>
         <span class="service-badge badge-included">✦ Hair Included</span>
+        <button class="service-book-btn" onclick="bookService('Box Braids|23000|7hrs')">Book This Style →</button>
       </div>
 
       <div class="service-card">
@@ -464,6 +468,7 @@ footer p{color:rgba(255,255,255,.3);font-size:.78rem;}
         <div class="service-duration">⏱ Approx. 7 hours</div>
         <div class="service-includes">Elegant pick and drop style. Hair included.</div>
         <span class="service-badge badge-included">✦ Hair Included</span>
+        <button class="service-book-btn" onclick="bookService('Pick n Drop|23000|7hrs')">Book This Style →</button>
       </div>
 
       <div class="service-card">
@@ -473,6 +478,7 @@ footer p{color:rgba(255,255,255,.3);font-size:.78rem;}
         <div class="service-duration">⏱ Approx. 7 hours</div>
         <div class="service-includes">Stunning goddess braids. Please bring your own curly extension hair.</div>
         <span class="service-badge badge-own">Bring Your Curly Extension</span>
+        <button class="service-book-btn" onclick="bookService('Goddess Braids|23000|7hrs')">Book This Style →</button>
       </div>
 
       <div class="service-card">
@@ -482,6 +488,7 @@ footer p{color:rgba(255,255,255,.3);font-size:.78rem;}
         <div class="service-duration">⏱ Approx. 7 hours</div>
         <div class="service-includes">Beautiful bohemian style braids. Please bring your own curly extension hair.</div>
         <span class="service-badge badge-own">Bring Your Curly Extension</span>
+        <button class="service-book-btn" onclick="bookService('Boho Braids|23000|7hrs')">Book This Style →</button>
       </div>
 
       <div class="service-card">
@@ -491,6 +498,7 @@ footer p{color:rgba(255,255,255,.3);font-size:.78rem;}
         <div class="service-duration">⏱ Approx. 5–6 hours</div>
         <div class="service-includes">Traditional Fulani style with beads and details. Hair included.</div>
         <span class="service-badge badge-included">✦ Hair Included</span>
+        <button class="service-book-btn" onclick="bookService('Fulani Braids|20000|5-6hrs')">Book This Style →</button>
       </div>
 
       <div class="service-card">
@@ -500,6 +508,7 @@ footer p{color:rgba(255,255,255,.3);font-size:.78rem;}
         <div class="service-duration">⏱ Approx. 5–6 hours</div>
         <div class="service-includes">Sleek cornrows with braiding extensions. Hair included.</div>
         <span class="service-badge badge-included">✦ Hair Included</span>
+        <button class="service-book-btn" onclick="bookService('Cornrows with Extensions|20000|5-6hrs')">Book This Style →</button>
       </div>
 
       <div class="service-card">
@@ -509,6 +518,10 @@ footer p{color:rgba(255,255,255,.3);font-size:.78rem;}
         <div class="service-duration">⏱ Approx. 4–5 hours</div>
         <div class="service-includes">Short ¥8,000 · Long ¥15,000. Price depends on hair length.</div>
         <span class="service-badge badge-included">✦ Hair Included</span>
+        <div style="display:flex;gap:8px;margin-top:14px;">
+          <button class="service-book-btn" style="flex:1;" onclick="bookService('Natural Twist Short|8000|4-5hrs')">Book Short →</button>
+          <button class="service-book-btn" style="flex:1;" onclick="bookService('Natural Twist Long|15000|4-5hrs')">Book Long →</button>
+        </div>
       </div>
 
       <div class="service-card">
@@ -518,6 +531,7 @@ footer p{color:rgba(255,255,255,.3);font-size:.78rem;}
         <div class="service-duration">⏱ 1–1.5 hours</div>
         <div class="service-includes">Clean cornrows on your natural hair. No extensions needed.</div>
         <span class="service-badge badge-own">No Extensions Needed</span>
+        <button class="service-book-btn" onclick="bookService('Cornrows Natural Hair|5000|1-1.5hrs')">Book This Style →</button>
       </div>
 
     </div>
@@ -613,6 +627,24 @@ footer p{color:rgba(255,255,255,.3);font-size:.78rem;}
       <p class="section-sub">A glimpse of the beautiful styles created at Merigo Tresses. Tap any photo to view.</p>
     </div>
     <div class="gallery-grid" id="galleryGrid"></div>
+    
+    <!-- INSTAGRAM LIVE FEED -->
+    <div style="margin-top:40px;">
+      <div style="text-align:center;margin-bottom:20px;">
+        <span style="font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:700;">✦ Latest on Instagram</span>
+        <h3 style="font-size:1.2rem;margin:6px 0 0;color:var(--text);">@merigo_tresses</h3>
+      </div>
+      <!-- EmbedSocial / Elfsight Instagram widget — free tier -->
+      <div id="instagramFeed" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;">
+        <!-- Fallback: show Instagram profile link beautifully if embed unavailable -->
+        <a href="https://instagram.com/merigo_tresses" target="_blank" rel="noopener"
+           style="grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:12px;padding:28px;background:linear-gradient(135deg,#f9ce34,#ee2a7b,#6228d7);border-radius:var(--r);color:#fff;text-decoration:none;font-weight:700;font-size:1rem;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          Follow @merigo_tresses on Instagram for the latest styles
+        </a>
+      </div>
+    </div>
+
     <div style="text-align:center;margin-top:24px">
       <a href="https://instagram.com/merigo_tresses" target="_blank" rel="noopener" class="btn btn-outline">
         See More on Instagram · @merigo_tresses
@@ -1029,79 +1061,15 @@ const galleryImages = [
 let selectedDate = null;
 let selectedTime = null;
 let calendarDate = new Date();
-let blockedDates = []; // whole-day blocks, fetched from Supabase on load
-let bookedSlots = {}; // { 'YYYY-MM-DD': [{time, service, durationHrs}] }
+let blockedDates = [];
+let bookedSlots = {}; // { 'YYYY-MM-DD': true } — one booking blocks the whole day
 
 // ── AVAILABLE SLOTS ──
 const ALL_SLOTS = ['10:00','11:00','12:00','13:00','14:30','15:30','16:30'];
 
-// ── SERVICE DURATIONS & RULES ──
-// Short services: allow up to MAX_SHORT_PER_DAY clients per day, slot-based blocking
-// Long services: block the whole day when any slot is booked
-const SERVICE_DURATIONS = {
-  'Knotless Braids': 7,
-  'Box Braids': 7,
-  'Pick \'n\' Drop': 7,
-  'Goddess Braids': 7,
-  'Boho Braids': 7,
-  'Fulani Braids': 5.5,
-  'Cornrows with Extensions': 5.5,
-  'Natural Twist Short': 4.5,
-  'Natural Twist Long': 4.5,
-  'Cornrows Natural Hair': 1.25,
-};
-const SHORT_SERVICES = ['Cornrows Natural Hair', 'Natural Twist Short', 'Natural Twist Long'];
-const MAX_SHORT_PER_DAY = 2;
-const LONG_SERVICE_THRESHOLD = 5; // hours — anything >= this blocks the whole day
-
-function slotToMinutes(slot) {
-  const [h, m] = slot.split(':').map(Number);
-  return h * 60 + m;
-}
-
-// Returns array of slots that would be blocked if a service of durationHrs starts at startSlot
-function getSlotsBlockedByBooking(startSlot, durationHrs) {
-  const startMins = slotToMinutes(startSlot);
-  const endMins = startMins + durationHrs * 60;
-  return ALL_SLOTS.filter(slot => {
-    const slotMins = slotToMinutes(slot);
-    return slotMins >= startMins && slotMins < endMins;
-  });
-}
-
-// Given all bookings for a date, return which slots are unavailable for a new booking
-function getUnavailableSlots(dateBookings) {
-  const unavailable = new Set();
-
-  // Check if any long service is booked — if so, block everything
-  const hasLongBooking = dateBookings.some(b => (SERVICE_DURATIONS[b.service] || 2) >= LONG_SERVICE_THRESHOLD);
-  if (hasLongBooking) {
-    ALL_SLOTS.forEach(s => unavailable.add(s));
-    return unavailable;
-  }
-
-  // Short services: block overlapping slots for each booking
-  dateBookings.forEach(b => {
-    const dur = SERVICE_DURATIONS[b.service] || 2;
-    getSlotsBlockedByBooking(b.time, dur).forEach(s => unavailable.add(s));
-  });
-
-  // If max short clients reached, block all remaining slots
-  if (dateBookings.length >= MAX_SHORT_PER_DAY) {
-    ALL_SLOTS.forEach(s => unavailable.add(s));
-  }
-
-  return unavailable;
-}
-
-// When a NEW booking is being made, also check if the chosen service would
-// conflict with a slot already taken (e.g. 4.5hr service starting at 13:00
-// would overlap with a 14:30 booking)
-function wouldNewBookingConflict(dateBookings, newSlot, newService) {
-  const newDur = SERVICE_DURATIONS[newService] || 2;
-  const newBlocked = new Set(getSlotsBlockedByBooking(newSlot, newDur));
-  // Check if any existing booking's slot falls inside the new booking's window
-  return dateBookings.some(b => newBlocked.has(b.time));
+// ── ONE CLIENT PER DAY ──
+function isDayFullyBooked(dateStr) {
+  return !!bookedSlots[dateStr];
 }
 
 // ── WORKING DAYS: every day is bookable by default; admin closes specific dates ──
@@ -1216,6 +1184,9 @@ function renderCalendar() {
       el.className = 'cal-day cal-disabled';
     } else if (!isWorkingDay(date)) {
       el.className = 'cal-day cal-disabled';
+    } else if (isDayFullyBooked(dateStr)) {
+      el.className = 'cal-day cal-disabled';
+      el.title = 'Fully booked';
     } else {
       el.className = 'cal-day cal-available';
       if (dateStr === todayStr) el.classList.add('cal-today');
@@ -1241,22 +1212,24 @@ async function showTimeSlots(dateStr, date) {
   const d = new Date(dateStr + 'T00:00:00');
   label.textContent = d.toLocaleDateString('en', {weekday:'long', month:'long', day:'numeric'});
 
-  const dateBookings = bookedSlots[dateStr] || [];
-  const unavailable = getUnavailableSlots(dateBookings);
-
   const grid = document.getElementById('slotsGrid');
-  grid.innerHTML = '<div class="no-slots">Checking availability...</div>';
 
+  // One client per day — if any booking exists, show all slots as taken
+  if (isDayFullyBooked(dateStr)) {
+    grid.innerHTML = '<div class="no-slots" style="grid-column:1/-1;text-align:center;padding:20px;color:var(--muted);font-size:.9rem;">This day is fully booked. Please choose another date.</div>';
+    return;
+  }
+
+  grid.innerHTML = '<div class="no-slots">Checking availability...</div>';
   const overrides = await fetchSlotOverrides(dateStr);
   grid.innerHTML = '';
 
   ALL_SLOTS.forEach(slot => {
     const closedByAdmin = overrides.hasOwnProperty(slot) && overrides[slot] === false;
-    const isTaken = unavailable.has(slot) || closedByAdmin;
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.textContent = slot;
-    if (isTaken) {
+    if (closedByAdmin) {
       btn.className = 'slot-btn slot-taken';
       btn.disabled = true;
     } else {
@@ -1302,11 +1275,8 @@ async function submitBooking() {
   btn.disabled = true;
   btn.textContent = 'Sending...';
 
-  // Block slot locally immediately so it shows as taken right away
-  if (!bookedSlots[selectedDate]) bookedSlots[selectedDate] = [];
-  if (!bookedSlots[selectedDate].some(x => x.time === selectedTime)) {
-    bookedSlots[selectedDate].push({ time: selectedTime, service: svcName });
-  }
+  // Block entire day locally immediately
+  bookedSlots[selectedDate] = true;
   const hairLength = document.getElementById('hairLength').value;
   const notes = document.getElementById('notes').value;
 
@@ -1453,18 +1423,30 @@ function downloadCalendarFile({ service, date, time, durationLabel }) {
 // ── FETCH BOOKED SLOTS FROM SUPABASE ──
 async function fetchBookedSlots() {
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/website_bookings?status=in.(pending,confirmed)&select=appt_date,appt_time,service`, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/website_bookings?status=in.(pending,confirmed)&select=appt_date`, {
       headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
     });
     const data = await res.json();
     if (Array.isArray(data)) {
-      data.forEach(b => {
-        if (!bookedSlots[b.appt_date]) bookedSlots[b.appt_date] = [];
-        const already = bookedSlots[b.appt_date].some(x => x.time === b.appt_time);
-        if (!already) bookedSlots[b.appt_date].push({ time: b.appt_time, service: b.service });
-      });
+      data.forEach(b => { bookedSlots[b.appt_date] = true; });
     }
   } catch(e) { console.log('Using local slot data'); }
+}
+
+// ── BOOK SERVICE DIRECTLY FROM PRICING CARD ──
+function bookService(serviceValue) {
+  // Set the service in the booking form dropdown
+  const serviceSelect = document.getElementById('service');
+  if (serviceSelect) {
+    serviceSelect.value = serviceValue;
+  }
+  // Scroll to booking section smoothly
+  const bookSection = document.getElementById('book');
+  if (bookSection) {
+    bookSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else {
+    document.querySelector('[id*="book"], [id*="Book"]')?.scrollIntoView({ behavior: 'smooth' });
+  }
 }
 
 // ── FAQ ──
