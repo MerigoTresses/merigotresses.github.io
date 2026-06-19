@@ -1293,6 +1293,9 @@ async function submitBooking() {
   if (!name || !email || !phone || !method || !service) { alert('Please fill in all required fields.'); return; }
   if (!agreed) { alert('Please agree to the cancellation policy to continue.'); return; }
 
+  const svcName = service.split('|')[0];
+  const svcPrice = service.split('|')[1];
+
   const btn = document.getElementById('submitBtn');
   btn.disabled = true;
   btn.textContent = 'Sending...';
@@ -1302,9 +1305,6 @@ async function submitBooking() {
   if (!bookedSlots[selectedDate].some(x => x.time === selectedTime)) {
     bookedSlots[selectedDate].push({ time: selectedTime, service: svcName });
   }
-
-  const svcName = service.split('|')[0];
-  const svcPrice = service.split('|')[1];
   const hairLength = document.getElementById('hairLength').value;
   const notes = document.getElementById('notes').value;
 
