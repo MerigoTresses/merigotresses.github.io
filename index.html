@@ -1028,10 +1028,79 @@ let selectedDate = null;
 let selectedTime = null;
 let calendarDate = new Date();
 let blockedDates = []; // whole-day blocks, fetched from Supabase on load
-let bookedSlots = {}; // { 'YYYY-MM-DD': ['10:00','11:00'] }
+let bookedSlots = {}; // { 'YYYY-MM-DD': [{time, service, durationHrs}] }
 
 // ── AVAILABLE SLOTS ──
 const ALL_SLOTS = ['10:00','11:00','12:00','13:00','14:30','15:30','16:30'];
+
+// ── SERVICE DURATIONS & RULES ──
+// Short services: allow up to MAX_SHORT_PER_DAY clients per day, slot-based blocking
+// Long services: block the whole day when any slot is booked
+const SERVICE_DURATIONS = {
+  'Knotless Braids': 7,
+  'Box Braids': 7,
+  'Pick \'n\' Drop': 7,
+  'Goddess Braids': 7,
+  'Boho Braids': 7,
+  'Fulani Braids': 5.5,
+  'Cornrows with Extensions': 5.5,
+  'Natural Twist Short': 4.5,
+  'Natural Twist Long': 4.5,
+  'Cornrows Natural Hair': 1.25,
+};
+const SHORT_SERVICES = ['Cornrows Natural Hair', 'Natural Twist Short', 'Natural Twist Long'];
+const MAX_SHORT_PER_DAY = 2;
+const LONG_SERVICE_THRESHOLD = 5; // hours — anything >= this blocks the whole day
+
+function slotToMinutes(slot) {
+  const [h, m] = slot.split(':').map(Number);
+  return h * 60 + m;
+}
+
+// Returns array of slots that would be blocked if a service of durationHrs starts at startSlot
+function getSlotsBlockedByBooking(startSlot, durationHrs) {
+  const startMins = slotToMinutes(startSlot);
+  const endMins = startMins + durationHrs * 60;
+  return ALL_SLOTS.filter(slot => {
+    const slotMins = slotToMinutes(slot);
+    return slotMins >= startMins && slotMins < endMins;
+  });
+}
+
+// Given all bookings for a date, return which slots are unavailable for a new booking
+function getUnavailableSlots(dateBookings) {
+  const unavailable = new Set();
+
+  // Check if any long service is booked — if so, block everything
+  const hasLongBooking = dateBookings.some(b => (SERVICE_DURATIONS[b.service] || 2) >= LONG_SERVICE_THRESHOLD);
+  if (hasLongBooking) {
+    ALL_SLOTS.forEach(s => unavailable.add(s));
+    return unavailable;
+  }
+
+  // Short services: block overlapping slots for each booking
+  dateBookings.forEach(b => {
+    const dur = SERVICE_DURATIONS[b.service] || 2;
+    getSlotsBlockedByBooking(b.time, dur).forEach(s => unavailable.add(s));
+  });
+
+  // If max short clients reached, block all remaining slots
+  if (dateBookings.length >= MAX_SHORT_PER_DAY) {
+    ALL_SLOTS.forEach(s => unavailable.add(s));
+  }
+
+  return unavailable;
+}
+
+// When a NEW booking is being made, also check if the chosen service would
+// conflict with a slot already taken (e.g. 4.5hr service starting at 13:00
+// would overlap with a 14:30 booking)
+function wouldNewBookingConflict(dateBookings, newSlot, newService) {
+  const newDur = SERVICE_DURATIONS[newService] || 2;
+  const newBlocked = new Set(getSlotsBlockedByBooking(newSlot, newDur));
+  // Check if any existing booking's slot falls inside the new booking's window
+  return dateBookings.some(b => newBlocked.has(b.time));
+}
 
 // ── WORKING DAYS: every day is bookable by default; admin closes specific dates ──
 function isWorkingDay(date) {
@@ -1170,7 +1239,9 @@ async function showTimeSlots(dateStr, date) {
   const d = new Date(dateStr + 'T00:00:00');
   label.textContent = d.toLocaleDateString('en', {weekday:'long', month:'long', day:'numeric'});
 
-  const taken = bookedSlots[dateStr] || [];
+  const dateBookings = bookedSlots[dateStr] || [];
+  const unavailable = getUnavailableSlots(dateBookings);
+
   const grid = document.getElementById('slotsGrid');
   grid.innerHTML = '<div class="no-slots">Checking availability...</div>';
 
@@ -1179,10 +1250,11 @@ async function showTimeSlots(dateStr, date) {
 
   ALL_SLOTS.forEach(slot => {
     const closedByAdmin = overrides.hasOwnProperty(slot) && overrides[slot] === false;
+    const isTaken = unavailable.has(slot) || closedByAdmin;
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.textContent = slot;
-    if (taken.includes(slot) || closedByAdmin) {
+    if (isTaken) {
       btn.className = 'slot-btn slot-taken';
       btn.disabled = true;
     } else {
@@ -1227,7 +1299,9 @@ async function submitBooking() {
 
   // Block slot locally immediately so it shows as taken right away
   if (!bookedSlots[selectedDate]) bookedSlots[selectedDate] = [];
-  if (!bookedSlots[selectedDate].includes(selectedTime)) bookedSlots[selectedDate].push(selectedTime);
+  if (!bookedSlots[selectedDate].some(x => x.time === selectedTime)) {
+    bookedSlots[selectedDate].push({ time: selectedTime, service: svcName });
+  }
 
   const svcName = service.split('|')[0];
   const svcPrice = service.split('|')[1];
@@ -1377,14 +1451,15 @@ function downloadCalendarFile({ service, date, time, durationLabel }) {
 // ── FETCH BOOKED SLOTS FROM SUPABASE ──
 async function fetchBookedSlots() {
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/website_bookings?status=in.(pending,confirmed)&select=appt_date,appt_time`, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/website_bookings?status=in.(pending,confirmed)&select=appt_date,appt_time,service`, {
       headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
     });
     const data = await res.json();
     if (Array.isArray(data)) {
       data.forEach(b => {
         if (!bookedSlots[b.appt_date]) bookedSlots[b.appt_date] = [];
-        if (!bookedSlots[b.appt_date].includes(b.appt_time)) bookedSlots[b.appt_date].push(b.appt_time);
+        const already = bookedSlots[b.appt_date].some(x => x.time === b.appt_time);
+        if (!already) bookedSlots[b.appt_date].push({ time: b.appt_time, service: b.service });
       });
     }
   } catch(e) { console.log('Using local slot data'); }
