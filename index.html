@@ -1133,9 +1133,11 @@ function renderCalendar() {
     grid.appendChild(el);
   }
 
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+
   for (let d = 1; d <= daysInMonth; d++) {
     const date = new Date(year, month, d);
-    const dateStr = date.toISOString().split('T')[0];
+    const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     const el = document.createElement('div');
     el.textContent = d;
 
@@ -1145,7 +1147,7 @@ function renderCalendar() {
       el.className = 'cal-day cal-disabled';
     } else {
       el.className = 'cal-day cal-available';
-      if (dateStr === new Date().toISOString().split('T')[0]) el.classList.add('cal-today');
+      if (dateStr === todayStr) el.classList.add('cal-today');
       if (selectedDate === dateStr) el.classList.add('cal-selected');
       el.addEventListener('click', () => selectDate(dateStr, date));
     }
@@ -1223,9 +1225,9 @@ async function submitBooking() {
   btn.disabled = true;
   btn.textContent = 'Sending...';
 
-  // Block slot locally immediately
+  // Block slot locally immediately so it shows as taken right away
   if (!bookedSlots[selectedDate]) bookedSlots[selectedDate] = [];
-  bookedSlots[selectedDate].push(selectedTime);
+  if (!bookedSlots[selectedDate].includes(selectedTime)) bookedSlots[selectedDate].push(selectedTime);
 
   const svcName = service.split('|')[0];
   const svcPrice = service.split('|')[1];
