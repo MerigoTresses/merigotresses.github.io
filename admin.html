@@ -400,18 +400,55 @@ async function loadBookings() {
     data.forEach(b => {
       const div = document.createElement('div');
       div.className = 'booking-row';
+      div.id = 'booking-' + b.id;
       const dateLabel = new Date(b.appt_date + 'T00:00:00').toLocaleDateString('en', {month:'short', day:'numeric', year:'numeric'});
+
+      const actions = b.status === 'pending' ? `
+        <button onclick="updateBookingStatus(${b.id}, 'confirmed')" style="background:#1E6B45;color:#fff;border:none;padding:5px 12px;border-radius:50px;font-size:.72rem;font-weight:700;cursor:pointer;">✓ Confirm</button>
+        <button onclick="updateBookingStatus(${b.id}, 'cancelled')" style="background:#7B1818;color:#fff;border:none;padding:5px 12px;border-radius:50px;font-size:.72rem;font-weight:700;cursor:pointer;">✕ Decline</button>
+      ` : b.status === 'confirmed' ? `
+        <button onclick="updateBookingStatus(${b.id}, 'completed')" style="background:#555;color:#fff;border:none;padding:5px 12px;border-radius:50px;font-size:.72rem;font-weight:700;cursor:pointer;">✓ Mark Done</button>
+        <button onclick="updateBookingStatus(${b.id}, 'cancelled')" style="background:#7B1818;color:#fff;border:none;padding:5px 12px;border-radius:50px;font-size:.72rem;font-weight:700;cursor:pointer;">✕ Cancel</button>
+      ` : '';
+
       div.innerHTML = `
         <strong>${b.client_name}</strong>
         <span>${b.service}</span>
         <span>${dateLabel} @ ${b.appt_time}</span>
         <span>${b.client_phone}</span>
         <span class="status-pill status-${b.status}">${b.status}</span>
+        <span style="display:flex;gap:6px;">${actions}</span>
       `;
       list.appendChild(div);
     });
   } catch(e) {
     list.innerHTML = '<p class="empty-note">Could not load bookings.</p>';
+  }
+}
+
+async function updateBookingStatus(id, newStatus) {
+  const row = document.getElementById('booking-' + id);
+  if (row) row.style.opacity = '0.5';
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/website_bookings?id=eq.${id}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ status: newStatus })
+    });
+    if (res.ok) {
+      await loadBookings(); // refresh the list
+    } else {
+      alert('Failed to update status. Please try again.');
+      if (row) row.style.opacity = '1';
+    }
+  } catch(e) {
+    alert('Network error. Please try again.');
+    if (row) row.style.opacity = '1';
   }
 }
 </script>
