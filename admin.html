@@ -190,8 +190,7 @@ input,button{font-family:'DM Sans',sans-serif;font-size:16px!important;}
 <script>
 const SUPABASE_URL = 'https://vpvbghdfounqcarrkbeu.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_UlCXeIxgu_8rwXzRGPXsIg_7v8KuEFU';
-const RESEND_FUNCTION_URL = 'https://vpvbghdfounqcarrkbeu.supabase.co/functions/v1/send-booking-email';
-const RESEND_API_KEY = 're_Q4qsTVFP_EXhRhMvdu3RTqGfacnAZsWYP';
+const CANCEL_FUNCTION_URL = 'https://vpvbghdfounqcarrkbeu.supabase.co/functions/v1/send-cancellation-email';
 const ADMIN_PASSWORD = 'MerigoTresses2026';
 const ALL_SLOTS = ['10:00','11:00','12:00','13:00','14:30','15:30','16:30'];
 
@@ -505,45 +504,19 @@ function cancelBooking(id, clientName, clientEmail, service, apptDate, apptTime,
       return;
     }
 
-    // 2. Send cancellation email directly via Resend
-    const dateLabel = new Date(apptDate + 'T00:00:00').toLocaleDateString('en', {weekday:'long', month:'long', day:'numeric', year:'numeric'});
-    const actionWord = type === 'declined' ? 'declined' : 'cancelled';
-    const html = `<div style="font-family:'DM Sans',Arial,sans-serif;background:#FBF5EC;padding:32px 16px;">
-      <div style="max-width:480px;margin:0 auto;background:#ffffff;border-radius:14px;overflow:hidden;border:1px solid #E8D9BE;">
-        <div style="background:#0D0608;padding:28px 24px;text-align:center;">
-          <div style="color:#C9841A;font-size:22px;font-weight:900;font-family:Georgia,serif;">Merigo Tresses</div>
-          <div style="color:rgba(255,255,255,0.5);font-size:12px;margin-top:4px;">Fukutsu, Fukuoka, Japan</div>
-        </div>
-        <div style="padding:28px 24px;">
-          <h2 style="color:#1A0C0E;font-size:18px;margin:0 0 16px;">Hi ${clientName}, your booking has been ${actionWord}</h2>
-          <p style="color:#555;font-size:14px;line-height:1.6;margin:0 0 16px;">We're sorry for the inconvenience. Here are the details of the booking that was ${actionWord}:</p>
-          <table style="width:100%;font-size:14px;color:#1A0C0E;border-collapse:collapse;margin-bottom:20px;">
-            <tr><td style="padding:8px 0;color:#7A5C35;">Service</td><td style="padding:8px 0;text-align:right;font-weight:600;">${service}</td></tr>
-            <tr><td style="padding:8px 0;color:#7A5C35;">Date</td><td style="padding:8px 0;text-align:right;font-weight:600;">${dateLabel}</td></tr>
-            <tr><td style="padding:8px 0;color:#7A5C35;">Time</td><td style="padding:8px 0;text-align:right;font-weight:600;">${apptTime}</td></tr>
-          </table>
-          <div style="background:#FDF3E3;border-radius:10px;padding:14px 16px;font-size:13px;color:#8B5A0A;line-height:1.6;">
-            <strong>Reason:</strong> ${reason}
-          </div>
-          <p style="color:#555;font-size:14px;line-height:1.6;margin:20px 0 0;">Please feel free to rebook for another available date, or reach out to Mercy directly on WhatsApp.</p>
-          <div style="text-align:center;margin-top:24px;">
-            <a href="https://merigotresses.github.io/#book" style="display:inline-block;background:#C9841A;color:#fff;padding:12px 28px;border-radius:50px;text-decoration:none;font-weight:600;font-size:14px;margin-right:8px;">Book Again</a>
-            <a href="https://wa.me/491706128008" style="display:inline-block;background:#25D366;color:#fff;padding:12px 28px;border-radius:50px;text-decoration:none;font-weight:600;font-size:14px;">WhatsApp Mercy</a>
-          </div>
-        </div>
-        <div style="background:#FBF5EC;padding:16px 24px;text-align:center;font-size:11px;color:#9c8a6c;">Merigo Tresses · Fukutsu, Fukuoka · @merigo_tresses</div>
-      </div>
-    </div>`;
-
+    // 2. Send cancellation email via Edge Function (key stays server-side, never exposed)
     try {
-      await fetch('https://api.resend.com/emails', {
+      await fetch(CANCEL_FUNCTION_URL, {
         method: 'POST',
-        headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_KEY}` },
         body: JSON.stringify({
-          from: 'Merigo Tresses <bookings@mercychiugo.com>',
-          to: [clientEmail],
-          subject: `Your Merigo Tresses booking has been ${actionWord}`,
-          html
+          client_name: clientName,
+          client_email: clientEmail,
+          service,
+          appt_date: apptDate,
+          appt_time: apptTime,
+          reason,
+          type
         })
       });
     } catch(e) {
